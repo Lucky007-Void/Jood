@@ -2,162 +2,82 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jood Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500;700&display=swap" rel="stylesheet">
+    <title>Jood Farm Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg: #0d1117;
-            --card-bg: #161b22;
-            --accent: #58a6ff;
-            --text: #c9d1d9;
-            --gold: #f2ca28;
-            --border: #30363d;
-        }
-
-        body {
-            font-family: 'Kanit', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 20px;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding: 20px;
-        }
-
-        .header h1 {
-            color: var(--accent);
-            font-size: 2rem;
-            text-shadow: 0 0 15px rgba(88, 166, 255, 0.2);
-        }
-
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .player-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-            transition: transform 0.2s;
-        }
-
-        .player-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent);
-        }
-
-        .player-name {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--accent);
-            text-align: center;
-            margin-bottom: 15px;
-            border-bottom: 2px solid var(--border);
-            padding-bottom: 10px;
-        }
-
-        .item-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .item-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.03);
-            padding: 10px 15px;
-            border-radius: 8px;
-        }
-
-        .item-label {
-            font-size: 0.9rem;
-            color: #8b949e;
-        }
-
-        .item-value {
-            font-weight: 600;
-            color: var(--gold);
-        }
-
-        .update-time {
-            font-size: 0.7rem;
-            color: #484f58;
-            text-align: right;
-            margin-top: 15px;
-        }
-
-        #status { font-size: 0.9rem; color: #484f58; }
+        :root { --bg: #0b0e14; --card-bg: #161b22; --accent: #58a6ff; --gold: #f2ca28; }
+        body { font-family: 'Kanit', sans-serif; background: var(--bg); color: #c9d1d9; padding: 20px; }
+        
+        .controls { max-width: 1000px; margin: 0 auto 20px; display: flex; gap: 10px; }
+        #searchBar { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid #30363d; background: #0d1117; color: white; font-size: 1rem; }
+        
+        .dashboard { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; max-width: 1000px; margin: 0 auto; }
+        .card { background: var(--card-bg); border: 1px solid #30363d; border-radius: 12px; padding: 20px; transition: 0.3s; }
+        .name { font-size: 1.2rem; color: var(--accent); font-weight: 600; border-bottom: 2px solid #30363d; margin-bottom: 12px; padding-bottom: 8px; text-align: center; }
+        .item-row { display: flex; justify-content: space-between; background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 6px; margin-bottom: 6px; }
+        .item-val { color: var(--gold); font-weight: bold; }
+        .offline-badge { color: #ff7b72; font-size: 0.8rem; display: none; text-align: center; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>📊 INVENTORY</h1>
-        <p id="status">กำลังเชื่อมต่อกับ Firebase...</p>
+    <h1 style="text-align:center;">📊 LIVE MULTI-MONITOR</h1>
+    
+    <div class="controls">
+        <input type="text" id="searchBar" placeholder="🔍 ค้นหาชื่อผู้เล่น..." onkeyup="filterPlayers()">
     </div>
 
-    <div class="dashboard" id="display">
-        </div>
+    <div class="dashboard" id="display"></div>
 
     <script>
-        const DATABASE_URL = "https://jood-af2d8-default-rtdb.asia-southeast1.firebasedatabase.app/Players.json";
+        const DB_URL = "https://jood-af2d8-default-rtdb.asia-southeast1.firebasedatabase.app/Players.json";
+        let lastData = {};
 
-        async function updateDashboard() {
+        async function update() {
             try {
-                const response = await fetch(DATABASE_URL);
-                const players = await response.json();
-                const container = document.getElementById('display');
-                const status = document.getElementById('status');
-                
-                if (!players) {
-                    status.innerText = "ยังไม่มีข้อมูลส่งมาจากในเกม...";
-                    container.innerHTML = "";
-                    return;
-                }
-
-                status.innerText = "อัปเดตล่าสุด: " + new Date().toLocaleTimeString();
-
-                let html = "";
-                for (let name in players) {
-                    html += `<div class="player-card">
-                                <div class="player-name">👤 ${name}</div>
-                                <div class="item-list">`;
-                    
-                    let lastSync = "";
-                    for (let item in players[name]) {
-                        html += `
-                            <div class="item-row">
-                                <span class="item-label">${item}</span>
-                                <span class="item-value">${players[name][item].Amount}</span>
-                            </div>`;
-                        lastSync = players[name][item].LastUpdate;
-                    }
-                    
-                    html += `</div><div class="update-time">อัปเดตเมื่อ: ${lastSync}</div></div>`;
-                }
-                container.innerHTML = html;
-            } catch (error) {
-                console.error("Fetch Error:", error);
-                document.getElementById('status').innerText = "เชื่อมต่อฐานข้อมูลไม่ได้!";
-            }
+                const res = await fetch(DB_URL);
+                const data = await res.json();
+                if (!data) return;
+                lastData = data;
+                render();
+            } catch (e) { console.error(e); }
         }
 
-        // รีเฟรชหน้าเว็บทุกๆ 5 วินาที
-        setInterval(updateDashboard, 5000);
-        updateDashboard();
+        function render() {
+            const container = document.getElementById('display');
+            const searchTxt = document.getElementById('searchBar').value.toLowerCase();
+            const now = Math.floor(Date.now() / 1000);
+            let html = "";
+
+            for (let name in lastData) {
+                if (!name.toLowerCase().includes(searchTxt)) continue;
+
+                let items = lastData[name];
+                let firstItemKey = Object.keys(items)[0];
+                let lastTimestamp = items[firstItemKey].Timestamp;
+
+                if (now - lastTimestamp > 30) {
+                    continue; 
+                }
+
+                html += `<div class="card" id="card-${name}">
+                            <div class="name">👤 ${name}</div>`;
+                for (let itemName in items) {
+                    html += `
+                    <div class="item-row">
+                        <span class="item-label">${itemName}</span>
+                        <span class="item-val">${items[itemName].Amount}</span>
+                    </div>`;
+                }
+                html += `</div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        function filterPlayers() { render(); }
+        setInterval(update, 5000); 
+        setInterval(render, 5000); 
+        update();
     </script>
 </body>
 </html>
