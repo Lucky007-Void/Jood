@@ -1,1 +1,127 @@
-ๅ
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard รหัสฟาร์ม</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0b0e14;
+            --card-bg: #161b22;
+            --accent: #58a6ff;
+            --text: #c9d1d9;
+            --gold: #f2ca28;
+        }
+
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .header { text-align: center; margin-bottom: 40px; }
+        .header h1 { color: var(--accent); font-size: 2.5rem; margin-bottom: 5px; }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .player-card {
+            background-color: var(--card-bg);
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .player-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-align: center;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #30363d;
+            padding-bottom: 10px;
+        }
+
+        .item-list { display: flex; flex-direction: column; gap: 8px; }
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+        }
+
+        .item-label { color: #8b949e; }
+        .item-value { color: var(--gold); font-weight: 600; }
+        .update-time { font-size: 0.75rem; color: #484f58; text-align: right; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>📦 LIVE INVENTORY</h1>
+        <p id="status">กำลังเชื่อมต่อฐานข้อมูล...</p>
+    </div>
+
+    <div class="dashboard" id="display">
+        </div>
+
+    <script>
+        // *** แก้ไข: เปลี่ยนเป็น URL Firebase ของคุณ (ต้องจบด้วย Players.json) ***
+        const DATABASE_URL = "https://your-project-id.firebaseio.com/Players.json";
+
+        async function updateDashboard() {
+            try {
+                const response = await fetch(DATABASE_URL);
+                const data = await response.json();
+                const container = document.getElementById('display');
+                const status = document.getElementById('status');
+                
+                if (!data) {
+                    status.innerText = "ยังไม่มีข้อมูลผู้เล่นออนไลน์";
+                    container.innerHTML = "";
+                    return;
+                }
+
+                status.innerText = "อัปเดตล่าสุดเมื่อ: " + new Date().toLocaleTimeString();
+
+                let html = "";
+                for (let name in data) {
+                    html += `
+                    <div class="player-card">
+                        <div class="player-name">👤 ${name}</div>
+                        <div class="item-list">`;
+                    
+                    let lastTime = "";
+                    for (let item in data[name]) {
+                        html += `
+                        <div class="item-row">
+                            <span class="item-label">${item}</span>
+                            <span class="item-value">${data[name][item].Amount}</span>
+                        </div>`;
+                        lastTime = data[name][item].LastUpdate;
+                    }
+                    
+                    html += `</div><div class="update-time">Sync: ${lastTime}</div></div>`;
+                }
+                container.innerHTML = html;
+            } catch (err) {
+                console.error("Error:", err);
+                document.getElementById('status').innerText = "เชื่อมต่อผิดพลาด!";
+            }
+        }
+
+        setInterval(updateDashboard, 5000); // รีเฟรชหน้าเว็บทุก 5 วินาที
+        updateDashboard();
+    </script>
+</body>
+</html>
