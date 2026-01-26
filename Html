@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Account Monitor</title>
+    <style>
+        body { font-family: sans-serif; background: #121212; color: white; padding: 20px; }
+        .item-card { background: #222; padding: 10px; border-radius: 5px; margin-bottom: 5px; border-left: 4px solid #00ff00; }
+        .amount { color: #ffcc00; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Player Status</h1>
+    <div id="display">กำลังโหลดข้อมูล...</div>
+
+    <script>
+        const FIREBASE_URL = "https://your-project.firebaseio.com/inventory.json";
+
+        async function updateWeb() {
+            try {
+                const response = await fetch(FIREBASE_URL);
+                const data = await response.json();
+                
+                let html = "";
+                for(let itemName in data) {
+                    html += `<div class="item-card">
+                        ${itemName}: <span class="amount">${data[itemName].Amount}</span>
+                    </div>`;
+                }
+                document.getElementById('display').innerHTML = html;
+            } catch(e) {
+                console.log("Error fetching data");
+            }
+        }
+
+        setInterval(updateWeb, 5000); // อัปเดตทุก 5 วินาที
+    </script>
+</body>
+</html>
