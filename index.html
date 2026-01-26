@@ -1,199 +1,105 @@
 <!DOCTYPE html>
-<html lang="th">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIP Inventory Monitor</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Live Farm Monitor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg: #0a0c10;
-            --accent: #00f2ff;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.1);
-        }
-
         body {
-            font-family: 'Kanit', sans-serif;
-            background: var(--bg);
+            background-color: #0f172a;
             color: white;
-            margin: 0;
-            padding: 20px;
-            background-image: radial-gradient(circle at 50% 50%, #1a1f2c 0%, #0a0c10 100%);
-            min-height: 100vh;
-        }
-
-        .container { max-width: 1300px; margin: 0 auto; }
-
-        .header {
-            text-align: center;
-            padding: 50px 0;
-        }
-
-        .header h1 {
-            font-size: 2.8rem;
-            margin: 0;
-            letter-spacing: 2px;
-            background: linear-gradient(to right, #00f2ff, #006aff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 10px 20px rgba(0, 242, 255, 0.2);
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 25px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-            border-color: var(--accent);
-            box-shadow: 0 15px 35px rgba(0, 242, 255, 0.1);
-        }
-
-        .player-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 15px;
-        }
-
-        .player-name {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: var(--accent);
-        }
-
-        .item-box {
+            font-family: 'Kanit', sans-serif;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            align-items: center;
+            padding: 40px;
         }
-
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+        .player-card {
+            background: #1e293b;
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid #334155;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .player-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #38bdf8;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #334155;
+            padding-bottom: 10px;
+            text-align: center;
+        }
         .item-row {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.2);
-            padding: 12px 18px;
-            border-radius: 12px;
-            border-left: 4px solid #555;
+            background: #0f172a;
+            margin-bottom: 8px;
+            padding: 10px 15px;
+            border-radius: 8px;
         }
-
-        /* แยกสีตามไอเทม */
-        .item-row[data-name="Cid Sword"] { border-left-color: #ff4d4d; }
-        .item-row[data-name="Race Reroll"] { border-left-color: #00ff88; }
-        .item-row[data-name="Trait Reroll"] { border-left-color: #ffcc00; }
-        .item-row[data-name="Holy Fragment"] { border-left-color: #a855f7; }
-
-        .name-tag { font-size: 0.95rem; color: #e2e8f0; }
-        .amount-tag { 
-            font-size: 1.1rem; 
-            font-weight: 700; 
-            color: white;
-            background: rgba(255,255,255,0.1);
-            padding: 2px 10px;
-            border-radius: 6px;
-        }
-
-        .update-time {
-            font-size: 0.75rem;
-            color: #64748b;
-            margin-top: 20px;
-            display: block;
+        .item-name { color: #94a3b8; }
+        .item-amount { color: #fbbf24; font-weight: bold; }
+        .time {
+            font-size: 0.7rem;
+            color: #475569;
             text-align: right;
+            margin-top: 10px;
         }
-
-        .pulse {
-            width: 10px; height: 10px; background: #22c55e;
-            border-radius: 50%; display: inline-block;
-            box-shadow: 0 0 10px #22c55e;
-            animation: blink 2s infinite;
-        }
-
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <h1><i class="fa-solid fa-microchip"></i> ACCOUNT MONITOR</h1>
-        <p style="color: #64748b;">ระบบติดตามไอเทมแรร์ - Realtime Dashboard</p>
+    <h1 style="margin-bottom: 40px;">🛒 รายการไอเทมแยกตามรหัส</h1>
+
+    <div class="dashboard" id="display">
+        <p>กำลังรอข้อมูลจาก Firebase...</p>
     </div>
 
-    <div class="grid" id="display">
-        </div>
-</div>
+    <script>
+        // *** ใส่ URL Firebase ของคุณตรงนี้ (ต้องมี .json ต่อท้าย) ***
+        const DB_URL = "https://your-project-id.firebaseio.com/Players.json";
 
-<script>
-    // *** เปลี่ยนเป็น URL Firebase ของคุณ ***
-    const DB_URL = "https://your-project-id.firebaseio.com/Players.json";
+        async function update() {
+            try {
+                const res = await fetch(DB_URL);
+                const data = await res.json();
+                const container = document.getElementById('display');
+                
+                if (!data) return;
 
-    async function loadData() {
-        try {
-            const res = await fetch(DB_URL);
-            const data = await res.json();
-            const container = document.getElementById('display');
-            
-            if (!data) {
-                container.innerHTML = "<p style='grid-column: 1/-1; text-align: center;'>กำลังรอข้อมูลจากตัวรันในเกม...</p>";
-                return;
-            }
-
-            let html = "";
-            for (let player in data) {
-                let items = data[player];
-                let itemHtml = "";
-                let lastTime = "";
-
-                for (let itemName in items) {
-                    itemHtml += `
-                        <div class="item-row" data-name="${itemName}">
-                            <span class="name-tag">${itemName}</span>
-                            <span class="amount-tag">${items[itemName].Amount}</span>
-                        </div>
-                    `;
-                    lastTime = items[itemName].LastUpdate;
+                let html = "";
+                for (let user in data) {
+                    html += `<div class="player-card">
+                                <div class="player-name">👤 ${user}</div>`;
+                    
+                    let lastTime = "";
+                    for (let itemName in data[user]) {
+                        let info = data[user][itemName];
+                        html += `
+                            <div class="item-row">
+                                <span class="item-name">${itemName}</span>
+                                <span class="item-amount">x${info.Amount}</span>
+                            </div>
+                        `;
+                        lastTime = info.LastUpdate;
+                    }
+                    
+                    html += `<div class="time">Update: ${lastTime}</div></div>`;
                 }
-
-                html += `
-                    <div class="card">
-                        <div class="player-info">
-                            <div class="pulse"></div>
-                            <span class="player-name">${player}</span>
-                        </div>
-                        <div class="item-box">
-                            ${itemHtml}
-                        </div>
-                        <span class="update-time">อัปเดตล่าสุด: ${lastTime}</span>
-                    </div>
-                `;
-            }
-            container.innerHTML = html;
-        } catch (e) {
-            console.error("Fetch error:", e);
+                container.innerHTML = html;
+            } catch (e) { console.error(e); }
         }
-    }
 
-    setInterval(loadData, 5000);
-    loadData();
-</script>
-
+        setInterval(update, 5000);
+        update();
+    </script>
 </body>
 </html>
