@@ -1,70 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
     <meta charset="UTF-8">
-    <title>Live Farm Monitor</title>
+    <title>Account Inventory Monitor</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        body {
-            background-color: #0f172a;
-            color: white;
-            font-family: 'Kanit', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 40px;
-        }
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            width: 100%;
-            max-width: 1200px;
-        }
-        .player-card {
-            background: #1e293b;
-            border-radius: 15px;
-            padding: 20px;
-            border: 1px solid #334155;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-        .player-name {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #38bdf8;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #334155;
-            padding-bottom: 10px;
-            text-align: center;
-        }
-        .item-row {
-            display: flex;
-            justify-content: space-between;
-            background: #0f172a;
-            margin-bottom: 8px;
-            padding: 10px 15px;
-            border-radius: 8px;
-        }
-        .item-name { color: #94a3b8; }
-        .item-amount { color: #fbbf24; font-weight: bold; }
-        .time {
-            font-size: 0.7rem;
-            color: #475569;
-            text-align: right;
-            margin-top: 10px;
-        }
+        body { font-family: 'Kanit', sans-serif; background: #0d1117; color: #c9d1d9; padding: 30px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .card { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 20px; }
+        .name { font-size: 1.4rem; color: #58a6ff; border-bottom: 2px solid #30363d; margin-bottom: 15px; padding-bottom: 5px; text-align: center; }
+        .item { display: flex; justify-content: space-between; padding: 8px 12px; background: rgba(255,255,255,0.03); border-radius: 6px; margin-bottom: 8px; }
+        .item-label { color: #8b949e; }
+        .item-val { color: #f2ca28; font-weight: bold; }
+        .update { font-size: 0.7rem; color: #484f58; text-align: right; margin-top: 10px; }
     </style>
 </head>
 <body>
-
-    <h1 style="margin-bottom: 40px;">🛒 รายการไอเทมแยกตามรหัส</h1>
-
-    <div class="dashboard" id="display">
-        <p>กำลังรอข้อมูลจาก Firebase...</p>
-    </div>
+    <h1 style="text-align:center;">📊 Multi-Account Inventory</h1>
+    <div class="grid" id="display">กำลังโหลดข้อมูล...</div>
 
     <script>
-        // *** ใส่ URL Firebase ของคุณตรงนี้ (ต้องมี .json ต่อท้าย) ***
         const DB_URL = "https://your-project-id.firebaseio.com/Players.json";
 
         async function update() {
@@ -72,34 +27,26 @@
                 const res = await fetch(DB_URL);
                 const data = await res.json();
                 const container = document.getElementById('display');
-                
                 if (!data) return;
 
                 let html = "";
                 for (let user in data) {
-                    html += `<div class="player-card">
-                                <div class="player-name">👤 ${user}</div>`;
-                    
+                    html += `<div class="card"><div class="name">👤 ${user}</div>`;
                     let lastTime = "";
-                    for (let itemName in data[user]) {
-                        let info = data[user][itemName];
+                    for (let item in data[user]) {
                         html += `
-                            <div class="item-row">
-                                <span class="item-name">${itemName}</span>
-                                <span class="item-amount">x${info.Amount}</span>
-                            </div>
-                        `;
-                        lastTime = info.LastUpdate;
+                            <div class="item">
+                                <span class="item-label">${item}</span>
+                                <span class="item-val">${data[user][item].Amount}</span>
+                            </div>`;
+                        lastTime = data[user][item].LastUpdate;
                     }
-                    
-                    html += `<div class="time">Update: ${lastTime}</div></div>`;
+                    html += `<div class="update">อัปเดต: ${lastTime}</div></div>`;
                 }
                 container.innerHTML = html;
             } catch (e) { console.error(e); }
         }
-
-        setInterval(update, 5000);
-        update();
+        setInterval(update, 5000); update();
     </script>
 </body>
 </html>
