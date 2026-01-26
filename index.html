@@ -2,75 +2,51 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <title>Live Inventory Dashboard</title>
+    <title>Account Inventory Monitor</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        body { background: #0d1117; color: #c9d1d9; font-family: 'Kanit', sans-serif; padding: 20px; text-align: center; }
-        .container { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-top: 30px; }
-        .card { background: #161b22; border: 1px solid #30363d; border-radius: 12px; width: 280px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .acc-name { color: #58a6ff; font-size: 1.4rem; font-weight: 600; border-bottom: 2px solid #30363d; margin-bottom: 15px; padding-bottom: 10px; }
-        .item-list { text-align: left; }
-        .item-row { display: flex; justify-content: space-between; padding: 8px 12px; background: rgba(255,255,255,0.03); border-radius: 6px; margin-bottom: 8px; }
-        .item-name { color: #8b949e; font-size: 0.9rem; }
-        .item-amount { color: #f2ca28; font-weight: bold; }
-        .update-time { font-size: 0.7rem; color: #484f58; margin-top: 15px; display: block; }
+        body { font-family: 'Kanit', sans-serif; background: #0d1117; color: #c9d1d9; padding: 30px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .card { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 20px; }
+        .name { font-size: 1.4rem; color: #58a6ff; border-bottom: 2px solid #30363d; margin-bottom: 15px; padding-bottom: 5px; text-align: center; }
+        .item { display: flex; justify-content: space-between; padding: 8px 12px; background: rgba(255,255,255,0.03); border-radius: 6px; margin-bottom: 8px; }
+        .item-label { color: #8b949e; }
+        .item-val { color: #f2ca28; font-weight: bold; }
+        .update { font-size: 0.7rem; color: #484f58; text-align: right; margin-top: 10px; }
     </style>
 </head>
 <body>
-
-    <h1>📊 ระบบติดตามไอเทมเรียลไทม์</h1>
-    <p id="status">กำลังเชื่อมต่อกับฐานข้อมูล...</p>
-
-    <div class="container" id="player-display">
-        </div>
+    <h1 style="text-align:center;">📊 Multi-Account Inventory</h1>
+    <div class="grid" id="display">กำลังโหลดข้อมูล...</div>
 
     <script>
-        // *** แก้ไขตรงนี้เป็น URL ของคุณ ***
-        const DATABASE_URL = "https://your-project-id.firebaseio.com/Players.json";
+        const DB_URL = "https://your-project-id.firebaseio.com/Players.json";
 
-        async function updateWeb() {
+        async function update() {
             try {
-                const response = await fetch(DATABASE_URL);
-                const data = await response.json();
-                const container = document.getElementById('player-display');
-                const status = document.getElementById('status');
+                const res = await fetch(DB_URL);
+                const data = await res.json();
+                const container = document.getElementById('display');
+                if (!data) return;
 
-                if (!data) {
-                    status.innerText = "ยังไม่มีข้อมูลผู้เล่นในระบบ";
-                    return;
-                }
-
-                status.innerText = "อัปเดตข้อมูลล่าสุดเมื่อ: " + new Date().toLocaleTimeString();
-                
                 let html = "";
-                for (let playerName in data) {
-                    html += `<div class="card">
-                                <div class="acc-name">👤 ${playerName}</div>
-                                <div class="item-list">`;
-                    
-                    let lastSync = "";
-                    for (let itemName in data[playerName]) {
-                        let info = data[playerName][itemName];
+                for (let user in data) {
+                    html += `<div class="card"><div class="name">👤 ${user}</div>`;
+                    let lastTime = "";
+                    for (let item in data[user]) {
                         html += `
-                            <div class="item-row">
-                                <span class="item-name">${itemName}</span>
-                                <span class="item-amount">x${info.Amount}</span>
+                            <div class="item">
+                                <span class="item-label">${item}</span>
+                                <span class="item-val">${data[user][item].Amount}</span>
                             </div>`;
-                        lastSync = info.LastUpdate;
+                        lastTime = data[user][item].LastUpdate;
                     }
-                    
-                    html += `</div><span class="update-time">Last Sync: ${lastSync}</span></div>`;
+                    html += `<div class="update">อัปเดต: ${lastTime}</div></div>`;
                 }
                 container.innerHTML = html;
-            } catch (err) {
-                console.error("Fetch Error:", err);
-                document.getElementById('status').innerText = "เกิดข้อผิดพลาดในการดึงข้อมูล";
-            }
+            } catch (e) { console.error(e); }
         }
-
-        // อัปเดตทุก 5 วินาที
-        setInterval(updateWeb, 5000);
-        updateWeb();
+        setInterval(update, 5000); update();
     </script>
 </body>
 </html>
