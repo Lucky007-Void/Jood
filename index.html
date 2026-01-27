@@ -11,9 +11,9 @@
             --card-bg: #ffffff;
             --text-main: #2d3436;
             --text-sub: #636e72;
-            --accent: #74b9ff; /* สีฟ้าอ่อนสบายตา */
-            --green: #55efc4;
-            --gold: #fab1a0; /* สีส้มพาสเทลแทนทองเข้ม */
+            --accent: #74b9ff;
+            --green: #2ecc71;
+            --status-green: #55efc4;
             --shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
 
@@ -30,7 +30,6 @@
             text-align: center;
             font-weight: 700;
             letter-spacing: -1px;
-            color: var(--text-main);
             margin-bottom: 10px;
             font-size: 2.2rem;
         }
@@ -53,11 +52,9 @@
             border-radius: 15px;
             border: 2px solid transparent;
             background: var(--card-bg);
-            color: var(--text-main);
-            font-size: 1rem;
+            box-shadow: var(--shadow);
             outline: none;
             transition: 0.3s;
-            box-shadow: var(--shadow);
             box-sizing: border-box;
         }
 
@@ -68,99 +65,79 @@
 
         .dashboard {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px;
-            max-width: 1100px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
         .card {
             background: var(--card-bg);
-            border-radius: 24px;
-            padding: 30px;
-            position: relative;
+            border-radius: 20px;
+            padding: 25px;
             box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-            border: 1px solid rgba(0,0,0,0.02);
+            transition: 0.3s;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-        }
+        .card:hover { transform: translateY(-5px); }
 
         .name-container {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 5px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f1f2f6;
+            padding-bottom: 10px;
         }
 
-        .name {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--text-main);
-        }
+        .name { font-size: 1.1rem; font-weight: 700; }
 
         .status-badge {
             display: flex;
             align-items: center;
-            font-size: 0.75rem;
-            color: var(--green);
-            font-weight: 500;
+            font-size: 0.7rem;
+            color: var(--status-green);
             background: rgba(85, 239, 196, 0.1);
-            padding: 4px 12px;
+            padding: 4px 10px;
             border-radius: 20px;
         }
 
         .online-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--green);
+            width: 7px;
+            height: 7px;
+            background: var(--status-green);
             border-radius: 50%;
-            margin-right: 6px;
-        }
-
-        .item-list {
-            margin-top: 25px;
+            margin-right: 5px;
         }
 
         .item-row {
             display: flex;
             justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid #f1f2f6;
+            padding: 10px 0;
+            border-bottom: 1px solid #f8f9fa;
         }
 
-        .item-row:last-child { border-bottom: none; }
+        .item-label { color: var(--text-sub); font-size: 0.9rem; }
 
-        .item-label {
-            color: var(--text-sub);
-            font-weight: 400;
+        .item-val {
+            font-weight: 600;
             font-size: 0.95rem;
         }
 
-        .item-val {
-            color: var(--text-main);
-            font-weight: 600;
-            background: #f1f2f6;
-            padding: 2px 10px;
-            border-radius: 8px;
-            font-size: 0.9rem;
+        .diff-text {
+            color: var(--green);
+            margin-left: 6px;
+            font-weight: 700;
         }
 
-        /* สำหรับ Scrollbar แบบมินิมอล */
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
         ::-webkit-scrollbar-thumb { background: #dcdde1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
-
     </style>
 </head>
 <body>
 
     <h1>JOOD FARM</h1>
-    <div class="subtitle">Live Inventory Tracking</div>
+    <div class="subtitle">Live Inventory Tracking (Session Gain)</div>
     
     <div class="search-container">
         <input type="text" id="searchBar" placeholder="Search player name..." onkeyup="render()">
@@ -172,26 +149,37 @@
         const DB_URL = "https://jood-af2d8-default-rtdb.asia-southeast1.firebasedatabase.app/Players.json";
         
         const itemOrder = [
-            "Race Reroll",
-            "Trait Reroll",
-            "Cid Sword",
-            "Atomic Orb",
-            "Anywhere Door",
-            "Handcannon",
+            "Race Reroll", 
+            "Trait Reroll", 
+            "Cid Sword", 
+            "Atomic Orb", 
+            "Anywhere Door", 
+            "Handcannon", 
             "Holy Fragment"
         ];
 
         let lastData = {};
+        let baselineValues = {};
 
         async function update() {
             try {
                 const res = await fetch(DB_URL);
                 const data = await res.json();
                 if (data) {
+                    for (let pName in data) {
+                        if (!baselineValues[pName]) baselineValues[pName] = {};
+                        
+                        for (let itemName in data[pName]) {
+                            let currentAmt = parseInt(data[pName][itemName].Amount) || 0;
+                            if (baselineValues[pName][itemName] === undefined) {
+                                baselineValues[pName][itemName] = currentAmt;
+                            }
+                        }
+                    }
                     lastData = data;
                     render();
                 }
-            } catch (e) { console.error("Connection Error:", e); }
+            } catch (e) { console.error("Fetch Error:", e); }
         }
 
         function render() {
@@ -205,32 +193,35 @@
 
                 let items = lastData[name];
                 let firstKey = Object.keys(items)[0];
-                let lastTimestamp = items[firstKey].Timestamp;
+                let lastTime = items[firstKey].Timestamp;
 
-                // ตรวจสอบความสดใหม่ของข้อมูล (30 วินาที)
-                if (now - lastTimestamp > 30) continue; 
+                if (now - lastTime > 30) continue; 
 
                 html += `
                 <div class="card">
                     <div class="name-container">
                         <div class="name">${name}</div>
-                        <div class="status-badge">
-                            <div class="online-dot"></div> Online
-                        </div>
-                    </div>
-                    <div class="item-list">`;
+                        <div class="status-badge"><div class="online-dot"></div> Online</div>
+                    </div>`;
                 
                 itemOrder.forEach(itemName => {
                     if (items[itemName]) {
+                        const current = parseInt(items[itemName].Amount) || 0;
+                        const base = baselineValues[name][itemName] || 0;
+                        const diff = current - base;
+
                         html += `
                         <div class="item-row">
                             <span class="item-label">${itemName}</span>
-                            <span class="item-val">${items[itemName].Amount}</span>
+                            <span class="item-val">
+                                ${base} 
+                                ${diff > 0 ? `<span class="diff-text">+ ${diff}</span>` : ''}
+                            </span>
                         </div>`;
                     }
                 });
 
-                html += `</div></div>`;
+                html += `</div>`;
             }
             container.innerHTML = html || '<div style="text-align:center; grid-column: 1/-1; color:#b2bec3;">Waiting for active players...</div>';
         }
