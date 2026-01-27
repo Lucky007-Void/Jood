@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JOOD SYSTEM</title>
+    <title>JOOD SYSTEM | ICON VERSION</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Kanit:wght@800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -20,7 +21,7 @@
             background-color: var(--bg);
             background-image: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
                               linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            background-size: 100% 4px, 3px 100%; /* เอฟเฟกต์เส้น Scanline */
+            background-size: 100% 4px, 3px 100%;
             color: #fff;
             margin: 0;
             padding: 20px;
@@ -31,6 +32,25 @@
             border-left: 10px solid var(--accent);
             padding-left: 20px;
             margin-bottom: 50px;
+        }
+
+        /* ส่วนของ Title และ Icon */
+        .title-container {
+            display: flex;
+            align-items: center;
+            gap: 15px; /* ระยะห่างระหว่างไอคอนกับชื่อ */
+        }
+
+        .main-icon {
+            font-size: 3.5rem;
+            color: #fff;
+            filter: drop-shadow(0 0 10px var(--neon-blue));
+            animation: spin 4s linear infinite; /* ไอคอนหมุนเท่ๆ */
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         h1 {
@@ -48,6 +68,7 @@
             color: var(--neon-blue);
             font-size: 1rem;
             font-weight: bold;
+            margin-bottom: 5px;
         }
 
         .search-container {
@@ -63,12 +84,6 @@
             color: var(--neon-green);
             font-family: 'Space Mono', monospace;
             outline: none;
-            transition: 0.2s;
-        }
-
-        #searchBar:focus {
-            border-color: var(--neon-green);
-            box-shadow: 0 0 15px var(--neon-green);
         }
 
         .dashboard {
@@ -82,12 +97,6 @@
             border: 2px solid #1a1a1a;
             padding: 20px;
             position: relative;
-            transition: 0.1s;
-        }
-
-        .card:hover {
-            border-color: var(--accent);
-            transform: skewX(-2deg); /* บิดนิดๆ ให้ดูเฟี้ยว */
         }
 
         .card-header {
@@ -102,7 +111,6 @@
         .player-name {
             font-weight: 700;
             color: var(--neon-blue);
-            font-size: 1.2rem;
         }
 
         .status-dot {
@@ -110,6 +118,7 @@
             height: 8px;
             background: var(--neon-green);
             box-shadow: 0 0 10px var(--neon-green);
+            border-radius: 50%;
         }
 
         .item-row {
@@ -119,36 +128,28 @@
             margin-bottom: 5px;
         }
 
-        .item-label { color: #666; }
         .item-val { color: var(--gold); font-weight: bold; }
 
-        .glitch-text {
-            animation: glitch 2s infinite;
-        }
-
-        @keyframes glitch {
-            0% { text-shadow: 2px 0 red, -2px 0 blue; }
-            50% { text-shadow: -2px 0 red, 2px 0 blue; }
-            100% { text-shadow: 2px 0 red, -2px 0 blue; }
-        }
-
-        /* Responsive */
         @media (max-width: 600px) {
             h1 { font-size: 2.5rem; }
+            .main-icon { font-size: 2.2rem; }
         }
     </style>
 </head>
 <body>
 
     <div class="header-box">
-        <div class="sub-title">// SYSTEM STATUS: RUNNING</div>
-        <h1 class="glitch-text">JOOD SYSTEM</h1>
-        <div style="font-size: 0.8rem; opacity: 0.6;">built by LuckyZ / 2026</div>
+        <div class="sub-title">// SYSTEM_ACCESS: GRANTED</div>
+        <div class="title-container">
+            <i class="fa-solid fa-circle-notch main-icon"></i> 
+            <h1 class="glitch-text">JOOD SYSTEM</h1>
+        </div>
+        <div style="font-size: 0.8rem; opacity: 0.6; margin-top: 5px;">STREET_EDITION_V2.01</div>
     </div>
     
     <div class="search-container">
         <span style="color: var(--accent);">></span> 
-        <input type="text" id="searchBar" placeholder="root@user: search_player_name" onkeyup="render()">
+        <input type="text" id="searchBar" placeholder="search_user..." onkeyup="render()">
     </div>
 
     <div class="dashboard" id="display"></div>
@@ -171,7 +172,7 @@
                     lastData = data;
                     render();
                 }
-            } catch (e) { console.error("CRITICAL ERROR:", e); }
+            } catch (e) { console.error("ERR:", e); }
         }
 
         function render() {
@@ -182,17 +183,15 @@
 
             for (let name in lastData) {
                 if (!name.toLowerCase().includes(searchTxt)) continue;
-
                 let items = lastData[name];
                 let firstKey = Object.keys(items)[0];
                 let lastTimestamp = items[firstKey].Timestamp;
-
                 if (now - lastTimestamp > 30) continue; 
 
                 html += `
                 <div class="card">
                     <div class="card-header">
-                        <div class="player-name">${name.toUpperCase()}</div>
+                        <div class="player-name">USER: ${name.toUpperCase()}</div>
                         <div class="status-dot"></div>
                     </div>
                     <div class="item-list">`;
@@ -201,7 +200,7 @@
                     if (items[itemName]) {
                         html += `
                         <div class="item-row">
-                            <span class="item-label">${itemName}_</span>
+                            <span class="item-label">${itemName}</span>
                             <span class="item-val">${items[itemName].Amount}</span>
                         </div>`;
                     }
@@ -209,7 +208,7 @@
 
                 html += `</div></div>`;
             }
-            container.innerHTML = html || '<div style="color:red;">[!] NO DATA FOUND IN DATABASE</div>';
+            container.innerHTML = html || '<div>[!] WAITING_FOR_DATA</div>';
         }
 
         setInterval(update, 5000); 
