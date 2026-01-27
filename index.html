@@ -3,154 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JOOD FARM</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Kanit:wght@200;400;600&display=swap" rel="stylesheet">
+    <title>JOOD FARM | Minimal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;500;700&family=Kanit:wght@200;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #05070a;
-            --panel: rgba(22, 27, 34, 0.7);
-            --accent: #00d2ff;
-            --gold: #f2ca28;
-            --neon-blue: #00d2ff;
-            --neon-green: #39ff14;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-main: #2d3436;
+            --text-sub: #636e72;
+            --accent: #74b9ff; /* สีฟ้าอ่อนสบายตา */
+            --green: #55efc4;
+            --gold: #fab1a0; /* สีส้มพาสเทลแทนทองเข้ม */
+            --shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
 
         body {
-            font-family: 'Kanit', sans-serif;
-            background: radial-gradient(circle at top, #10141d 0%, var(--bg) 100%);
-            color: #e6edf3;
+            font-family: 'Be Vietnam Pro', 'Kanit', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
             margin: 0;
             padding: 40px 20px;
-            min-height: 100vh;
+            line-height: 1.6;
         }
 
         h1 {
-            font-family: 'Orbitron', sans-serif;
             text-align: center;
-            letter-spacing: 5px;
-            color: var(--accent);
-            text-shadow: 0 0 15px rgba(0, 210, 255, 0.5);
+            font-weight: 700;
+            letter-spacing: -1px;
+            color: var(--text-main);
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-sub);
             margin-bottom: 40px;
-            font-size: 2.5rem;
+            font-weight: 300;
         }
 
         .search-container {
-            max-width: 600px;
-            margin: 0 auto 40px;
-            position: relative;
+            max-width: 500px;
+            margin: 0 auto 50px;
         }
 
         #searchBar {
             width: 100%;
-            padding: 15px 25px;
-            border-radius: 50px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: var(--panel);
-            backdrop-filter: blur(10px);
-            color: white;
-            font-size: 1.1rem;
+            padding: 14px 25px;
+            border-radius: 15px;
+            border: 2px solid transparent;
+            background: var(--card-bg);
+            color: var(--text-main);
+            font-size: 1rem;
             outline: none;
             transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            box-shadow: var(--shadow);
+            box-sizing: border-box;
         }
 
         #searchBar:focus {
             border-color: var(--accent);
-            box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
+            transform: translateY(-2px);
         }
 
         .dashboard {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-            max-width: 1200px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1100px;
             margin: 0 auto;
         }
 
         .card {
-            background: var(--panel);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 25px;
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 30px;
             position: relative;
-            overflow: hidden;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.02);
         }
 
         .card:hover {
-            transform: translateY(-10px);
-            border-color: var(--accent);
-            box-shadow: 0 10px 30px rgba(0, 210, 255, 0.2);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
         }
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 4px; height: 100%;
-            background: var(--accent);
-        }
-
-        .name {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.3rem;
-            color: #fff;
-            margin-bottom: 5px;
+        .name-container {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            margin-bottom: 5px;
         }
 
-        .online-status {
-            width: 10px;
-            height: 10px;
-            background: var(--neon-green);
+        .name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--green);
+            font-weight: 500;
+            background: rgba(85, 239, 196, 0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .online-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--green);
             border-radius: 50%;
-            box-shadow: 0 0 10px var(--neon-green);
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.3; }
-            100% { opacity: 1; }
+            margin-right: 6px;
         }
 
         .item-list {
-            margin-top: 20px;
+            margin-top: 25px;
         }
 
         .item-row {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f2f6;
         }
 
+        .item-row:last-child { border-bottom: none; }
+
         .item-label {
-            color: #8b949e;
-            font-weight: 300;
+            color: var(--text-sub);
+            font-weight: 400;
+            font-size: 0.95rem;
         }
 
         .item-val {
-            color: var(--gold);
+            color: var(--text-main);
             font-weight: 600;
-            text-shadow: 0 0 5px rgba(242, 202, 40, 0.3);
+            background: #f1f2f6;
+            padding: 2px 10px;
+            border-radius: 8px;
+            font-size: 0.9rem;
         }
 
-        ::-webkit-scrollbar { width: 8px; }
+        /* สำหรับ Scrollbar แบบมินิมอล */
+        ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #dcdde1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
     </style>
 </head>
 <body>
 
-    <h1>Dashboard</h1>
+    <h1>JOOD FARM</h1>
+    <div class="subtitle">Live Inventory Tracking</div>
     
     <div class="search-container">
-        <input type="text" id="searchBar" placeholder="IDENTIFY PLAYER NAME..." onkeyup="render()">
+        <input type="text" id="searchBar" placeholder="Search player name..." onkeyup="render()">
     </div>
 
     <div class="dashboard" id="display"></div>
@@ -178,7 +191,7 @@
                     lastData = data;
                     render();
                 }
-            } catch (e) { console.error("Link Error:", e); }
+            } catch (e) { console.error("Connection Error:", e); }
         }
 
         function render() {
@@ -194,15 +207,17 @@
                 let firstKey = Object.keys(items)[0];
                 let lastTimestamp = items[firstKey].Timestamp;
 
+                // ตรวจสอบความสดใหม่ของข้อมูล (30 วินาที)
                 if (now - lastTimestamp > 30) continue; 
 
                 html += `
                 <div class="card">
-                    <div class="name">
-                        <span>${name.toUpperCase()}</span>
-                        <div class="online-status"></div>
+                    <div class="name-container">
+                        <div class="name">${name}</div>
+                        <div class="status-badge">
+                            <div class="online-dot"></div> Online
+                        </div>
                     </div>
-                    <div style="font-size: 0.7rem; color: var(--accent); margin-bottom: 15px;">ACTIVE CONNECTION</div>
                     <div class="item-list">`;
                 
                 itemOrder.forEach(itemName => {
@@ -217,7 +232,7 @@
 
                 html += `</div></div>`;
             }
-            container.innerHTML = html || '<div style="text-align:center; grid-column: 1/-1; opacity:0.5;">NO ACTIVE DATA DETECTED</div>';
+            container.innerHTML = html || '<div style="text-align:center; grid-column: 1/-1; color:#b2bec3;">Waiting for active players...</div>';
         }
 
         setInterval(update, 5000); 
