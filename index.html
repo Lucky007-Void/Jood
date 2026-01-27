@@ -2,29 +2,54 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jood Farm Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #0b0e14; --card-bg: #161b22; --accent: #58a6ff; --gold: #f2ca28; }
-        body { font-family: 'Kanit', sans-serif; background: var(--bg); color: #c9d1d9; padding: 20px; }
-        
-        .controls { max-width: 1000px; margin: 0 auto 20px; display: flex; gap: 10px; }
-        #searchBar { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid #30363d; background: #0d1117; color: white; font-size: 1rem; }
-        
-        .dashboard { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; max-width: 1000px; margin: 0 auto; }
-        .card { background: var(--card-bg); border: 1px solid #30363d; border-radius: 12px; padding: 20px; transition: 0.3s; }
-        .name { font-size: 1.2rem; color: var(--accent); font-weight: 600; border-bottom: 2px solid #30363d; margin-bottom: 12px; padding-bottom: 8px; text-align: center; }
-        .item-row { display: flex; justify-content: space-between; background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 6px; margin-bottom: 6px; }
-        .item-val { color: var(--gold); font-weight: bold; }
-        .offline-badge { color: #ff7b72; font-size: 0.8rem; display: none; text-align: center; }
+        :root { 
+            --bg: #0d1117; 
+            --card-bg: #161b22; 
+            --accent: #58a6ff; 
+            --gold: #f2ca28; 
+            --online: #238636;
+            --offline: #da3633;
+        }
+        body { font-family: 'Kanit', sans-serif; background: var(--bg); color: #c9d1d9; margin: 0; padding: 20px; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .controls { max-width: 1000px; margin: 0 auto 20px; }
+        #searchBar { 
+            width: 100%; padding: 12px 20px; border-radius: 10px; border: 1px solid #30363d; 
+            background: #0d1117; color: white; font-size: 1rem; box-sizing: border-box;
+        }
+        .dashboard { 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 20px; max-width: 1200px; margin: 0 auto; 
+        }
+        .card { 
+            background: var(--card-bg); border: 1px solid #30363d; border-radius: 12px; 
+            padding: 15px; position: relative; transition: transform 0.2s;
+        }
+        .card:hover { transform: translateY(-5px); }
+        .name { font-size: 1.1rem; color: var(--accent); font-weight: 600; text-align: center; margin-bottom: 5px; }
+        .status { font-size: 0.75rem; text-align: center; margin-bottom: 15px; font-weight: bold; }
+        .online { color: var(--online); }
+        .offline { color: var(--offline); }
+        .item-list { border-top: 1px solid #30363d; padding-top: 10px; }
+        .item-row { 
+            display: flex; justify-content: space-between; background: rgba(255,255,255,0.03); 
+            padding: 6px 12px; border-radius: 6px; margin-bottom: 5px; font-size: 0.9rem;
+        }
+        .item-val { color: var(--gold); font-weight: 600; }
     </style>
 </head>
 <body>
 
-    <h1 style="text-align:center;">📊 MULTI MONITOR</h1>
+    <div class="header">
+        <h1>📊 JOOD FARM MONITOR</h1>
+    </div>
     
     <div class="controls">
-        <input type="text" id="searchBar" placeholder="🔍 Search..." onkeyup="filterPlayers()">
+        <input type="text" id="searchBar" placeholder="🔍 ค้นหาชื่อผู้เล่น..." onkeyup="render()">
     </div>
 
     <div class="dashboard" id="display"></div>
@@ -33,14 +58,17 @@
         const DB_URL = "https://jood-af2d8-default-rtdb.asia-southeast1.firebasedatabase.app/Players.json";
         let lastData = {};
 
-        async function update() {
+        async function updateData() {
             try {
                 const res = await fetch(DB_URL);
                 const data = await res.json();
-                if (!data) return;
-                lastData = data;
-                render();
-            } catch (e) { console.error(e); }
+                if (data) {
+                    lastData = data;
+                    render();
+                }
+            } catch (e) {
+                console.error("Fetch Error:", e);
+            }
         }
 
         function render() {
@@ -53,31 +81,33 @@
                 if (!name.toLowerCase().includes(searchTxt)) continue;
 
                 let items = lastData[name];
-                let firstItemKey = Object.keys(items)[0];
-                let lastTimestamp = items[firstItemKey].Timestamp;
+                let itemKeys = Object.keys(items);
+                if (itemKeys.length === 0) continue;
 
-                if (now - lastTimestamp > 30) {
-                    continue; 
-                }
+                let lastUpdate = items[itemKeys[0]].Timestamp || 0;
+                let isOnline = (now - lastUpdate) < 35;
 
-                html += `<div class="card" id="card-${name}">
-                            <div class="name">👤 ${name}</div>`;
-                for (let itemName in items) {
-                    html += `
-                    <div class="item-row">
-                        <span class="item-label">${itemName}</span>
-                        <span class="item-val">${items[itemName].Amount}</span>
-                    </div>`;
-                }
-                html += `</div>`;
+                html += `
+                <div class="card" style="opacity: ${isOnline ? 1 : 0.6}">
+                    <div class="name">👤 ${name}</div>
+                    <div class="status ${isOnline ? 'online' : 'offline'}">
+                        ${isOnline ? '● ONLINE' : '○ OFFLINE'}
+                    </div>
+                    <div class="item-list">
+                        ${Object.entries(items).map(([itemName, details]) => `
+                            <div class="item-row">
+                                <span>${itemName}</span>
+                                <span class="item-val">${details.Amount}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>`;
             }
-            container.innerHTML = html;
+            container.innerHTML = html || '<p style="text-align:center; width:100%;">ไม่พบข้อมูล...</p>';
         }
 
-        function filterPlayers() { render(); }
-        setInterval(update, 5000); 
-        setInterval(render, 5000); 
-        update();
+        updateData();
+        setInterval(updateData, 5000);
     </script>
 </body>
 </html>
