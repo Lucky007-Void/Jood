@@ -4,15 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JOOD FARM</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Kanit:wght@300;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Space+Grotesk:wght@500;700&family=Kanit:wght@300;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #f5f5f7; /* สีพื้นหลังแบบ Apple Desktop */
-            --card: #ffffff;
-            --accent: #000000;
-            --text-main: #1d1d1f;
-            --text-sub: #86868b;
-            --online: #34c759; /* เขียวแบบ iOS */
+            --bg: #ffffff;
+            --text-main: #000000;
+            --text-sub: #888888;
+            --line: #eeeeee;
+            --card-hover: #fafafa;
         }
 
         body {
@@ -20,151 +19,151 @@
             background-color: var(--bg);
             color: var(--text-main);
             margin: 0;
-            padding: 60px 20px;
-            -webkit-font-smoothing: antialiased;
+            padding: 80px 24px;
+            letter-spacing: -0.01em;
         }
 
-        .container {
-            max-width: 1000px;
+        .wrapper {
+            max-width: 1200px;
             margin: 0 auto;
         }
 
         header {
-            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--text-main);
             margin-bottom: 60px;
         }
 
         h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3.5rem;
+            line-height: 0.9;
             margin: 0;
+            text-transform: uppercase;
         }
 
-        .status-dot {
-            display: inline-flex;
-            align-items: center;
-            font-size: 0.9rem;
-            color: var(--text-sub);
-            margin-top: 8px;
+        .header-meta {
+            text-align: right;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
         }
 
-        .status-dot::before {
-            content: "";
-            width: 8px; height: 8px;
-            background: var(--online);
-            border-radius: 50%;
-            margin-right: 8px;
-        }
-
-        /* Search Bar แบบเนียนไปกับพื้นหลัง */
-        .search-box {
-            max-width: 450px;
-            margin: 0 auto 50px;
+        .search-area {
+            margin-bottom: 80px;
         }
 
         #searchBar {
             width: 100%;
-            padding: 16px 24px;
+            padding: 20px 0;
+            background: transparent;
             border: none;
-            border-radius: 18px;
-            background: rgba(0,0,0,0.04);
-            font-size: 1rem;
-            font-family: inherit;
+            border-bottom: 1px solid var(--line);
+            font-size: 1.5rem;
+            font-family: 'Space Grotesk', sans-serif;
             outline: none;
-            transition: all 0.2s ease;
-            text-align: center;
+            transition: 0.3s;
         }
 
         #searchBar:focus {
-            background: #ffffff;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-            transform: translateY(-2px);
+            border-bottom-color: var(--text-main);
         }
 
-        /* Card ดีไซน์เน้นขอบมนพิเศษและเงาแบบไฮเอนด์ */
         .dashboard {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1px; /* สร้างเส้นแบ่งระหว่างการ์ดด้วย Grid Gap */
+            background-color: var(--line); /* เส้นแบ่งสีเทา */
+            border: 1px solid var(--line);
         }
 
         .card {
-            background: var(--card);
-            border-radius: 28px;
-            padding: 32px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02), 0 10px 40px rgba(0,0,0,0.04);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(0,0,0,0.01);
+            background-color: var(--bg);
+            padding: 40px;
+            transition: 0.3s ease;
+            position: relative;
         }
 
         .card:hover {
-            transform: scale(1.02);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+            background-color: var(--card-hover);
         }
 
-        .player-head {
-            margin-bottom: 24px;
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 40px;
         }
 
         .player-name {
-            font-size: 1.3rem;
-            font-weight: 600;
-            letter-spacing: -0.01em;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
         }
 
-        .item-list {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
+        .status-mark {
+            width: 12px;
+            height: 12px;
+            background: var(--text-main);
+            border-radius: 50%;
         }
 
         .item-row {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f9f9f9;
         }
 
         .item-label {
             color: var(--text-sub);
-            font-size: 0.95rem;
-            font-weight: 400;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            font-weight: 500;
         }
 
         .item-val {
-            font-weight: 600;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
             font-size: 1rem;
-            color: var(--accent);
-            background: #f5f5f7;
-            padding: 4px 12px;
-            border-radius: 10px;
         }
 
-        /* แถบสีข้างชื่อเพิ่มความเท่แบบ Minimal */
-        .card-accent {
-            width: 40px;
-            height: 4px;
-            background: var(--accent);
-            border-radius: 2px;
-            margin-bottom: 12px;
+        .no-data {
+            grid-column: 1/-1;
+            padding: 100px 0;
+            text-align: center;
+            background: white;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
         }
 
-        @media (max-width: 600px) {
-            .dashboard { grid-template-columns: 1fr; }
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            header { flex-direction: column; align-items: flex-start; gap: 20px; }
         }
-
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <div class="wrapper">
         <header>
-            <h1>JOOD FARM</h1>
-            <div class="status-dot">Network Active</div>
+            <h1>JOOD<br>FARM</h1>
+            <div class="header-meta">
+                Inventory Terminal<br>
+                v.2026.4.0<br>
+                Status: Online
+            </div>
         </header>
         
-        <div class="search-box">
-            <input type="text" id="searchBar" placeholder="Search player..." onkeyup="render()">
+        <div class="search-area">
+            <input type="text" id="searchBar" placeholder="TYPE TO SEARCH..." onkeyup="render()">
         </div>
 
         <div class="dashboard" id="display"></div>
@@ -174,13 +173,8 @@
         const DB_URL = "https://jood-af2d8-default-rtdb.asia-southeast1.firebasedatabase.app/Players.json";
         
         const itemOrder = [
-            "Race Reroll", 
-            "Trait Reroll", 
-            "Cid Sword", 
-            "Atomic Orb", 
-            "Anywhere Door", 
-            "Handcannon", 
-            "Holy Fragment"
+            "Race Reroll", "Trait Reroll", "Cid Sword", 
+            "Atomic Orb", "Anywhere Door", "Handcannon", "Holy Fragment"
         ];
 
         let lastData = {};
@@ -193,7 +187,7 @@
                     lastData = data;
                     render();
                 }
-            } catch (e) { console.error("Error:", e); }
+            } catch (e) { console.error(e); }
         }
 
         function render() {
@@ -213,9 +207,9 @@
 
                 html += `
                 <div class="card">
-                    <div class="card-accent"></div>
-                    <div class="player-head">
+                    <div class="card-header">
                         <div class="player-name">${name}</div>
+                        <div class="status-mark"></div>
                     </div>
                     <div class="item-list">`;
                 
@@ -231,7 +225,7 @@
 
                 html += `</div></div>`;
             }
-            container.innerHTML = html || '<div style="text-align:center; grid-column: 1/-1; opacity:0.3; margin-top:40px;">No signal detected</div>';
+            container.innerHTML = html || '<div class="no-data">System Idle / No Active Signals</div>';
         }
 
         setInterval(update, 5000); 
