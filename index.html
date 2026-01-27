@@ -14,7 +14,6 @@
             --accent: #74b9ff;
             --green: #2ecc71;
             --status-green: #55efc4;
-            --status-red: #ff7675;
             --shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
 
@@ -27,47 +26,109 @@
             line-height: 1.6;
         }
 
-        h1 { text-align: center; font-weight: 700; letter-spacing: -1px; margin-bottom: 10px; font-size: 2.2rem; }
-        .subtitle { text-align: center; color: var(--text-sub); margin-bottom: 40px; font-weight: 300; }
-
-        .search-container { max-width: 500px; margin: 0 auto 50px; }
-        #searchBar {
-            width: 100%; padding: 14px 25px; border-radius: 15px; border: 2px solid transparent;
-            background: var(--card-bg); box-shadow: var(--shadow); outline: none; transition: 0.3s; box-sizing: border-box;
+        h1 {
+            text-align: center;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+            font-size: 2.2rem;
         }
-        #searchBar:focus { border-color: var(--accent); transform: translateY(-2px); }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-sub);
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        .search-container {
+            max-width: 500px;
+            margin: 0 auto 50px;
+        }
+
+        #searchBar {
+            width: 100%;
+            padding: 14px 25px;
+            border-radius: 15px;
+            border: 2px solid transparent;
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
+            outline: none;
+            transition: 0.3s;
+            box-sizing: border-box;
+        }
+
+        #searchBar:focus {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
 
         .dashboard {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px; max-width: 1200px; margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .card { background: var(--card-bg); border-radius: 20px; padding: 25px; box-shadow: var(--shadow); transition: 0.3s; }
-        
-        .card.offline { opacity: 0.7; grayscale: 0.5; }
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: 0.3s;
+        }
+
+        .card:hover { transform: translateY(-5px); }
 
         .name-container {
-            display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 15px; border-bottom: 2px solid #f1f2f6; padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f1f2f6;
+            padding-bottom: 10px;
         }
 
         .name { font-size: 1.1rem; font-weight: 700; }
 
         .status-badge {
-            display: flex; align-items: center; font-size: 0.7rem; font-weight: bold;
-            padding: 4px 10px; border-radius: 20px;
+            display: flex;
+            align-items: center;
+            font-size: 0.7rem;
+            color: var(--status-green);
+            background: rgba(85, 239, 196, 0.1);
+            padding: 4px 10px;
+            border-radius: 20px;
         }
-        .status-badge.online { color: var(--status-green); background: rgba(85, 239, 196, 0.1); }
-        .status-badge.offline { color: var(--status-red); background: rgba(255, 118, 117, 0.1); }
 
-        .dot { width: 7px; height: 7px; border-radius: 50%; margin-right: 5px; }
-        .dot.online { background: var(--status-green); }
-        .dot.offline { background: var(--status-red); }
+        .online-dot {
+            width: 7px;
+            height: 7px;
+            background: var(--status-green);
+            border-radius: 50%;
+            margin-right: 5px;
+        }
 
-        .item-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f8f9fa; }
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f8f9fa;
+        }
+
         .item-label { color: var(--text-sub); font-size: 0.9rem; }
-        .item-val { font-weight: 600; font-size: 0.95rem; }
-        .diff-text { color: var(--green); margin-left: 6px; font-weight: 700; }
+
+        .item-val {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .diff-text {
+            color: var(--green);
+            margin-left: 6px;
+            font-weight: 700;
+        }
 
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #dcdde1; border-radius: 10px; }
@@ -76,7 +137,7 @@
 <body>
 
     <h1>JOOD FARM</h1>
-    <div class="subtitle">Live Inventory Tracker</div>
+    <div class="subtitle">Inventory</div>
     
     <div class="search-container">
         <input type="text" id="searchBar" placeholder="Search player name..." onkeyup="render()">
@@ -98,7 +159,7 @@
         ];
 
         let lastData = {};
-        let baselineValues = {}; 
+        let baselineValues = {};
 
         async function update() {
             try {
@@ -107,6 +168,7 @@
                 if (data) {
                     for (let pName in data) {
                         if (!baselineValues[pName]) baselineValues[pName] = {};
+                        
                         for (let itemName in data[pName]) {
                             let currentAmt = parseInt(data[pName][itemName].Amount) || 0;
                             if (baselineValues[pName][itemName] === undefined) {
@@ -126,32 +188,21 @@
             const now = Math.floor(Date.now() / 1000);
             let html = "";
 
-            const sortedPlayers = Object.keys(lastData).sort((a, b) => {
-                const timeA = lastData[a][Object.keys(lastData[a])[0]].Timestamp;
-                const timeB = lastData[b][Object.keys(lastData[b])[0]].Timestamp;
-                return timeB - timeA;
-            });
-
-            for (let name of sortedPlayers) {
+            for (let name in lastData) {
                 if (!name.toLowerCase().includes(searchTxt)) continue;
 
                 let items = lastData[name];
                 let firstKey = Object.keys(items)[0];
                 let lastTime = items[firstKey].Timestamp;
 
-                const isOnline = (now - lastTime <= 15);
-                const statusClass = isOnline ? 'online' : 'offline';
-                const statusText = isOnline ? 'Online' : 'Offline';
+                if (now - lastTime > 30) continue; 
 
                 html += `
-                <div class="card ${statusClass}">
+                <div class="card">
                     <div class="name-container">
                         <div class="name">${name}</div>
-                        <div class="status-badge ${statusClass}">
-                            <div class="dot ${statusClass}"></div> ${statusText}
-                        </div>
-                    </div>
-                    <div class="item-list">`;
+                        <div class="status-badge"><div class="online-dot"></div> Online</div>
+                    </div>`;
                 
                 itemOrder.forEach(itemName => {
                     if (items[itemName]) {
@@ -170,12 +221,12 @@
                     }
                 });
 
-                html += `</div></div>`;
+                html += `</div>`;
             }
-            container.innerHTML = html || '<div style="text-align:center; grid-column: 1/-1; color:#b2bec3;">No players found...</div>';
+            container.innerHTML = html || '<div style="text-align:center; grid-column: 1/-1; color:#b2bec3;">Waiting for active players...</div>';
         }
 
-        setInterval(update, 5000); 
+        setInterval(update, 3000); 
         update();
     </script>
 </body>
