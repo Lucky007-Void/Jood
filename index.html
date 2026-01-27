@@ -3,167 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JOOD FARM | Minimal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;500;700&family=Kanit:wght@200;400;500&display=swap" rel="stylesheet">
+    <title>JOOD FARM | PRO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Kanit:wght@300;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #f8f9fa;
-            --card-bg: #ffffff;
-            --text-main: #2d3436;
-            --text-sub: #636e72;
-            --accent: #74b9ff; /* สีฟ้าอ่อนสบายตา */
-            --green: #55efc4;
-            --gold: #fab1a0; /* สีส้มพาสเทลแทนทองเข้ม */
-            --shadow: 0 10px 30px rgba(0,0,0,0.05);
+            --bg-color: #0b0e14;
+            --card-bg: #161b22;
+            --accent-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            --text-primary: #ffffff;
+            --text-secondary: #8b949e;
+            --border-color: rgba(255, 255, 255, 0.08);
         }
 
         body {
-            font-family: 'Be Vietnam Pro', 'Kanit', sans-serif;
-            background-color: var(--bg);
-            color: var(--text-main);
+            font-family: 'Inter', 'Kanit', sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(79, 172, 254, 0.05) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(0, 242, 254, 0.05) 0px, transparent 50%);
+            color: var(--text-primary);
             margin: 0;
-            padding: 40px 20px;
-            line-height: 1.6;
+            padding: 50px 20px;
+            min-height: 100vh;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 60px;
         }
 
         h1 {
-            text-align: center;
-            font-weight: 700;
-            letter-spacing: -1px;
-            color: var(--text-main);
-            margin-bottom: 10px;
-            font-size: 2.2rem;
+            font-weight: 800;
+            font-size: 3rem;
+            margin: 0;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -2px;
         }
 
-        .subtitle {
-            text-align: center;
-            color: var(--text-sub);
-            margin-bottom: 40px;
-            font-weight: 300;
+        .status-summary {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
-        .search-container {
-            max-width: 500px;
+        .search-wrapper {
+            max-width: 600px;
             margin: 0 auto 50px;
+            position: relative;
         }
 
         #searchBar {
             width: 100%;
-            padding: 14px 25px;
-            border-radius: 15px;
-            border: 2px solid transparent;
+            padding: 18px 30px;
             background: var(--card-bg);
-            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 100px;
+            color: white;
             font-size: 1rem;
             outline: none;
-            transition: 0.3s;
-            box-shadow: var(--shadow);
-            box-sizing: border-box;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         #searchBar:focus {
-            border-color: var(--accent);
-            transform: translateY(-2px);
+            border-color: #4facfe;
+            box-shadow: 0 0 0 4px rgba(79, 172, 254, 0.15);
+            transform: scale(1.02);
         }
 
         .dashboard {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px;
-            max-width: 1100px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
         .card {
             background: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 24px;
-            padding: 30px;
+            padding: 25px;
             position: relative;
-            box-shadow: var(--shadow);
             transition: all 0.3s ease;
-            border: 1px solid rgba(0,0,0,0.02);
+            overflow: hidden;
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border-color: rgba(79, 172, 254, 0.5);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
 
-        .name-container {
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: var(--accent-gradient);
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .card:hover::before { opacity: 1; }
+
+        .player-info {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            margin-bottom: 5px;
+            align-items: center;
+            margin-bottom: 20px;
         }
 
-        .name {
-            font-size: 1.2rem;
+        .player-name {
+            font-size: 1.4rem;
             font-weight: 700;
-            color: var(--text-main);
+            letter-spacing: -0.5px;
         }
 
-        .status-badge {
+        .live-indicator {
             display: flex;
             align-items: center;
-            font-size: 0.75rem;
-            color: var(--green);
-            font-weight: 500;
-            background: rgba(85, 239, 196, 0.1);
-            padding: 4px 12px;
-            border-radius: 20px;
+            gap: 6px;
+            background: rgba(0, 255, 157, 0.1);
+            color: #00ff9d;
+            padding: 5px 12px;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
         }
 
-        .online-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--green);
+        .dot {
+            width: 6px;
+            height: 6px;
+            background: #00ff9d;
             border-radius: 50%;
-            margin-right: 6px;
+            box-shadow: 0 0 10px #00ff9d;
         }
 
-        .item-list {
-            margin-top: 25px;
+        .item-grid {
+            display: grid;
+            gap: 12px;
         }
 
-        .item-row {
+        .item-box {
             display: flex;
             justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid #f1f2f6;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 12px 16px;
+            border-radius: 12px;
+            transition: 0.2s;
         }
 
-        .item-row:last-child { border-bottom: none; }
-
-        .item-label {
-            color: var(--text-sub);
-            font-weight: 400;
-            font-size: 0.95rem;
+        .item-box:hover {
+            background: rgba(255, 255, 255, 0.06);
         }
 
-        .item-val {
-            color: var(--text-main);
-            font-weight: 600;
-            background: #f1f2f6;
-            padding: 2px 10px;
-            border-radius: 8px;
+        .label {
+            color: var(--text-secondary);
             font-size: 0.9rem;
         }
 
-        /* สำหรับ Scrollbar แบบมินิมอล */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: #dcdde1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+        .value {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            color: #4facfe;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4facfe; }
 
     </style>
 </head>
 <body>
 
-    <h1>JOOD FARM</h1>
-    <div class="subtitle">Live Inventory Tracking</div>
+    <div class="header-section">
+        <h1>JOOD FARM</h1>
+        <div class="status-summary">System Terminal • Active Connections</div>
+    </div>
     
-    <div class="search-container">
-        <input type="text" id="searchBar" placeholder="Search player name..." onkeyup="render()">
+    <div class="search-wrapper">
+        <input type="text" id="searchBar" placeholder="Identify Player Name..." onkeyup="render()">
     </div>
 
     <div class="dashboard" id="display"></div>
@@ -172,13 +198,8 @@
         const DB_URL = "https://jood-af2d8-default-rtdb.asia-southeast1.firebasedatabase.app/Players.json";
         
         const itemOrder = [
-            "Race Reroll",
-            "Trait Reroll",
-            "Cid Sword",
-            "Atomic Orb",
-            "Anywhere Door",
-            "Handcannon",
-            "Holy Fragment"
+            "Race Reroll", "Trait Reroll", "Cid Sword", 
+            "Atomic Orb", "Anywhere Door", "Handcannon", "Holy Fragment"
         ];
 
         let lastData = {};
@@ -191,7 +212,7 @@
                     lastData = data;
                     render();
                 }
-            } catch (e) { console.error("Connection Error:", e); }
+            } catch (e) { console.error("Link Error:", e); }
         }
 
         function render() {
@@ -207,32 +228,31 @@
                 let firstKey = Object.keys(items)[0];
                 let lastTimestamp = items[firstKey].Timestamp;
 
-                // ตรวจสอบความสดใหม่ของข้อมูล (30 วินาที)
                 if (now - lastTimestamp > 30) continue; 
 
                 html += `
                 <div class="card">
-                    <div class="name-container">
-                        <div class="name">${name}</div>
-                        <div class="status-badge">
-                            <div class="online-dot"></div> Online
+                    <div class="player-info">
+                        <div class="player-name">${name}</div>
+                        <div class="live-indicator">
+                            <div class="dot"></div> LIVE
                         </div>
                     </div>
-                    <div class="item-list">`;
+                    <div class="item-grid">`;
                 
                 itemOrder.forEach(itemName => {
                     if (items[itemName]) {
                         html += `
-                        <div class="item-row">
-                            <span class="item-label">${itemName}</span>
-                            <span class="item-val">${items[itemName].Amount}</span>
+                        <div class="item-box">
+                            <span class="label">${itemName}</span>
+                            <span class="value">${items[itemName].Amount}</span>
                         </div>`;
                     }
                 });
 
                 html += `</div></div>`;
             }
-            container.innerHTML = html || '<div style="text-align:center; grid-column: 1/-1; color:#b2bec3;">Waiting for active players...</div>';
+            container.innerHTML = html || '<div style="text-align:center; grid-column: 1/-1; opacity:0.3; padding:50px;">NO ACTIVE SIGNAL DETECTED</div>';
         }
 
         setInterval(update, 5000); 
