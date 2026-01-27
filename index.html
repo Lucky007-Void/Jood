@@ -3,153 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JOOD SYSTEM | ICON VERSION</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Kanit:wght@800&display=swap" rel="stylesheet">
+    <title>JOOD FARM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Kanit:wght@200;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #000000;
-            --panel: #0d0d0d;
-            --accent: #ff0055;
-            --neon-blue: #00f3ff;
-            --neon-green: #00ff41;
+            --bg: #05070a;
+            --panel: rgba(22, 27, 34, 0.7);
+            --accent: #00d2ff;
             --gold: #f2ca28;
+            --neon-blue: #00d2ff;
+            --neon-green: #39ff14;
         }
 
         body {
-            font-family: 'Space Mono', monospace;
-            background-color: var(--bg);
-            background-image: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
-                              linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            background-size: 100% 4px, 3px 100%;
-            color: #fff;
+            font-family: 'Kanit', sans-serif;
+            background: radial-gradient(circle at top, #10141d 0%, var(--bg) 100%);
+            color: #e6edf3;
             margin: 0;
-            padding: 20px;
-        }
-
-        .header-box {
-            text-align: left;
-            border-left: 10px solid var(--accent);
-            padding-left: 20px;
-            margin-bottom: 50px;
-        }
-
-        /* ส่วนของ Title และ Icon */
-        .title-container {
-            display: flex;
-            align-items: center;
-            gap: 15px; /* ระยะห่างระหว่างไอคอนกับชื่อ */
-        }
-
-        .main-icon {
-            font-size: 3.5rem;
-            color: #fff;
-            filter: drop-shadow(0 0 10px var(--neon-blue));
-            animation: spin 4s linear infinite; /* ไอคอนหมุนเท่ๆ */
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            padding: 40px 20px;
+            min-height: 100vh;
         }
 
         h1 {
-            font-family: 'Kanit', sans-serif;
-            font-size: 4rem;
-            margin: 0;
-            text-transform: uppercase;
-            font-style: italic;
-            line-height: 0.9;
-            color: #fff;
-            text-shadow: 4px 4px var(--accent), -2px -2px var(--neon-blue);
-        }
-
-        .sub-title {
-            color: var(--neon-blue);
-            font-size: 1rem;
-            font-weight: bold;
-            margin-bottom: 5px;
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            letter-spacing: 5px;
+            color: var(--accent);
+            text-shadow: 0 0 15px rgba(0, 210, 255, 0.5);
+            margin-bottom: 40px;
+            font-size: 2.5rem;
         }
 
         .search-container {
-            margin-bottom: 30px;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            position: relative;
         }
 
         #searchBar {
             width: 100%;
-            max-width: 400px;
-            background: transparent;
-            border: 2px solid #333;
-            padding: 10px;
-            color: var(--neon-green);
-            font-family: 'Space Mono', monospace;
+            padding: 15px 25px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: var(--panel);
+            backdrop-filter: blur(10px);
+            color: white;
+            font-size: 1.1rem;
             outline: none;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        #searchBar:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
         }
 
         .dashboard {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .card {
             background: var(--panel);
-            border: 2px solid #1a1a1a;
-            padding: 20px;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 25px;
             position: relative;
+            overflow: hidden;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .card-header {
-            border-bottom: 2px dashed #333;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(0, 210, 255, 0.2);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--accent);
+        }
+
+        .name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 5px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
         }
 
-        .player-name {
-            font-weight: 700;
-            color: var(--neon-blue);
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
+        .online-status {
+            width: 10px;
+            height: 10px;
             background: var(--neon-green);
-            box-shadow: 0 0 10px var(--neon-green);
             border-radius: 50%;
+            box-shadow: 0 0 10px var(--neon-green);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        .item-list {
+            margin-top: 20px;
         }
 
         .item-row {
             display: flex;
             justify-content: space-between;
-            font-size: 0.85rem;
-            margin-bottom: 5px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .item-val { color: var(--gold); font-weight: bold; }
-
-        @media (max-width: 600px) {
-            h1 { font-size: 2.5rem; }
-            .main-icon { font-size: 2.2rem; }
+        .item-label {
+            color: #8b949e;
+            font-weight: 300;
         }
+
+        .item-val {
+            color: var(--gold);
+            font-weight: 600;
+            text-shadow: 0 0 5px rgba(242, 202, 40, 0.3);
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
     </style>
 </head>
 <body>
 
-    <div class="header-box">
-        <div class="sub-title">// SYSTEM_ACCESS: GRANTED</div>
-        <div class="title-container">
-            <i class="fa-solid fa-circle-notch main-icon"></i> 
-            <h1 class="glitch-text">JOOD SYSTEM</h1>
-        </div>
-        <div style="font-size: 0.8rem; opacity: 0.6; margin-top: 5px;">STREET_EDITION_V2.01</div>
-    </div>
+    <h1>Dashboard</h1>
     
     <div class="search-container">
-        <span style="color: var(--accent);">></span> 
-        <input type="text" id="searchBar" placeholder="search_user..." onkeyup="render()">
+        <input type="text" id="searchBar" placeholder="IDENTIFY PLAYER NAME..." onkeyup="render()">
     </div>
 
     <div class="dashboard" id="display"></div>
@@ -158,8 +159,13 @@
         const DB_URL = "https://jood-af2d8-default-rtdb.asia-southeast1.firebasedatabase.app/Players.json";
         
         const itemOrder = [
-            "Race Reroll", "Trait Reroll", "Cid Sword", 
-            "Atomic Orb", "Anywhere Door", "Handcannon", "Holy Fragment"
+            "Race Reroll",
+            "Trait Reroll",
+            "Cid Sword",
+            "Atomic Orb",
+            "Anywhere Door",
+            "Handcannon",
+            "Holy Fragment"
         ];
 
         let lastData = {};
@@ -172,7 +178,7 @@
                     lastData = data;
                     render();
                 }
-            } catch (e) { console.error("ERR:", e); }
+            } catch (e) { console.error("Link Error:", e); }
         }
 
         function render() {
@@ -183,17 +189,20 @@
 
             for (let name in lastData) {
                 if (!name.toLowerCase().includes(searchTxt)) continue;
+
                 let items = lastData[name];
                 let firstKey = Object.keys(items)[0];
                 let lastTimestamp = items[firstKey].Timestamp;
+
                 if (now - lastTimestamp > 30) continue; 
 
                 html += `
                 <div class="card">
-                    <div class="card-header">
-                        <div class="player-name">USER: ${name.toUpperCase()}</div>
-                        <div class="status-dot"></div>
+                    <div class="name">
+                        <span>${name.toUpperCase()}</span>
+                        <div class="online-status"></div>
                     </div>
+                    <div style="font-size: 0.7rem; color: var(--accent); margin-bottom: 15px;">ACTIVE CONNECTION</div>
                     <div class="item-list">`;
                 
                 itemOrder.forEach(itemName => {
@@ -208,7 +217,7 @@
 
                 html += `</div></div>`;
             }
-            container.innerHTML = html || '<div>[!] WAITING_FOR_DATA</div>';
+            container.innerHTML = html || '<div style="text-align:center; grid-column: 1/-1; opacity:0.5;">NO ACTIVE DATA DETECTED</div>';
         }
 
         setInterval(update, 5000); 
