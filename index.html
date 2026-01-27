@@ -2,26 +2,155 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <title>Jood Farm Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JOOD FARM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Kanit:wght@200;400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #0b0e14; --card-bg: #161b22; --accent: #58a6ff; --gold: #f2ca28; }
-        body { font-family: 'Kanit', sans-serif; background: var(--bg); color: #c9d1d9; padding: 20px; }
-        .controls { max-width: 1000px; margin: 0 auto 20px; display: flex; gap: 10px; }
-        #searchBar { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid #30363d; background: #0d1117; color: white; font-size: 1rem; }
-        .dashboard { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; max-width: 1000px; margin: 0 auto; }
-        .card { background: var(--card-bg); border: 1px solid #30363d; border-radius: 12px; padding: 20px; transition: 0.3s; }
-        .name { font-size: 1.2rem; color: var(--accent); font-weight: 600; border-bottom: 2px solid #30363d; margin-bottom: 12px; padding-bottom: 8px; text-align: center; }
-        .item-row { display: flex; justify-content: space-between; background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 6px; margin-bottom: 6px; }
-        .item-val { color: var(--gold); font-weight: bold; }
+        :root {
+            --bg: #05070a;
+            --panel: rgba(22, 27, 34, 0.7);
+            --accent: #00d2ff;
+            --gold: #f2ca28;
+            --neon-blue: #00d2ff;
+            --neon-green: #39ff14;
+        }
+
+        body {
+            font-family: 'Kanit', sans-serif;
+            background: radial-gradient(circle at top, #10141d 0%, var(--bg) 100%);
+            color: #e6edf3;
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            letter-spacing: 5px;
+            color: var(--accent);
+            text-shadow: 0 0 15px rgba(0, 210, 255, 0.5);
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto 40px;
+            position: relative;
+        }
+
+        #searchBar {
+            width: 100%;
+            padding: 15px 25px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: var(--panel);
+            backdrop-filter: blur(10px);
+            color: white;
+            font-size: 1.1rem;
+            outline: none;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        #searchBar:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--panel);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(0, 210, 255, 0.2);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--accent);
+        }
+
+        .name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .online-status {
+            width: 10px;
+            height: 10px;
+            background: var(--neon-green);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--neon-green);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        .item-list {
+            margin-top: 20px;
+        }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .item-label {
+            color: #8b949e;
+            font-weight: 300;
+        }
+
+        .item-val {
+            color: var(--gold);
+            font-weight: 600;
+            text-shadow: 0 0 5px rgba(242, 202, 40, 0.3);
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
     </style>
 </head>
 <body>
 
-    <h1 style="text-align:center;">📊 MULTI MONITOR (ORDERED)</h1>
+    <h1>Dashboard</h1>
     
-    <div class="controls">
-        <input type="text" id="searchBar" placeholder="🔍 Search..." onkeyup="filterPlayers()">
+    <div class="search-container">
+        <input type="text" id="searchBar" placeholder="IDENTIFY PLAYER NAME..." onkeyup="render()">
     </div>
 
     <div class="dashboard" id="display"></div>
@@ -29,7 +158,6 @@
     <script>
         const DB_URL = "https://jood-af2d8-default-rtdb.asia-southeast1.firebasedatabase.app/Players.json";
         
-        // กำหนดลำดับการแสดงผลตาม WHITELIST ที่คุณต้องการ
         const itemOrder = [
             "Race Reroll",
             "Trait Reroll",
@@ -46,10 +174,11 @@
             try {
                 const res = await fetch(DB_URL);
                 const data = await res.json();
-                if (!data) return;
-                lastData = data;
-                render();
-            } catch (e) { console.error(e); }
+                if (data) {
+                    lastData = data;
+                    render();
+                }
+            } catch (e) { console.error("Link Error:", e); }
         }
 
         function render() {
@@ -67,10 +196,15 @@
 
                 if (now - lastTimestamp > 30) continue; 
 
-                html += `<div class="card" id="card-${name}">
-                            <div class="name">👤 ${name}</div>`;
+                html += `
+                <div class="card">
+                    <div class="name">
+                        <span>${name.toUpperCase()}</span>
+                        <div class="online-status"></div>
+                    </div>
+                    <div style="font-size: 0.7rem; color: var(--accent); margin-bottom: 15px;">ACTIVE CONNECTION</div>
+                    <div class="item-list">`;
                 
-                // แก้ไขจุดนี้: วนลูปตาม Array itemOrder แทนการวนลูป items ตรงๆ
                 itemOrder.forEach(itemName => {
                     if (items[itemName]) {
                         html += `
@@ -81,12 +215,11 @@
                     }
                 });
 
-                html += `</div>`;
+                html += `</div></div>`;
             }
-            container.innerHTML = html;
+            container.innerHTML = html || '<div style="text-align:center; grid-column: 1/-1; opacity:0.5;">NO ACTIVE DATA DETECTED</div>';
         }
 
-        function filterPlayers() { render(); }
         setInterval(update, 5000); 
         update();
     </script>
