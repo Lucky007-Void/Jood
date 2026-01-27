@@ -4,177 +4,181 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JOOD FARM</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Space+Grotesk:wght@500;700&family=Kanit:wght@300;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;500;700&family=Kanit:wght@200;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #ffffff;
-            --text-main: #000000;
-            --text-sub: #888888;
-            --line: #eeeeee;
-            --card-hover: #fafafa;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-main: #2d3436;
+            --text-sub: #636e72;
+            --accent: #74b9ff; /* สีฟ้าอ่อนสบายตา */
+            --green: #55efc4;
+            --gold: #fab1a0; /* สีส้มพาสเทลแทนทองเข้ม */
+            --shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
 
         body {
-            font-family: 'Inter', 'Kanit', sans-serif;
+            font-family: 'Be Vietnam Pro', 'Kanit', sans-serif;
             background-color: var(--bg);
             color: var(--text-main);
             margin: 0;
-            padding: 80px 24px;
-            letter-spacing: -0.01em;
-        }
-
-        .wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            padding-bottom: 20px;
-            border-bottom: 2px solid var(--text-main);
-            margin-bottom: 60px;
+            padding: 40px 20px;
+            line-height: 1.6;
         }
 
         h1 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 3.5rem;
-            line-height: 0.9;
-            margin: 0;
-            text-transform: uppercase;
-        }
-
-        .header-meta {
-            text-align: right;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.8rem;
+            text-align: center;
             font-weight: 700;
-            text-transform: uppercase;
+            letter-spacing: -1px;
+            color: var(--text-main);
+            margin-bottom: 10px;
+            font-size: 2.2rem;
         }
 
-        .search-area {
-            margin-bottom: 80px;
+        .subtitle {
+            text-align: center;
+            color: var(--text-sub);
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        .search-container {
+            max-width: 500px;
+            margin: 0 auto 50px;
         }
 
         #searchBar {
             width: 100%;
-            padding: 20px 0;
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid var(--line);
-            font-size: 1.5rem;
-            font-family: 'Space Grotesk', sans-serif;
+            padding: 14px 25px;
+            border-radius: 15px;
+            border: 2px solid transparent;
+            background: var(--card-bg);
+            color: var(--text-main);
+            font-size: 1rem;
             outline: none;
             transition: 0.3s;
+            box-shadow: var(--shadow);
+            box-sizing: border-box;
         }
 
         #searchBar:focus {
-            border-bottom-color: var(--text-main);
+            border-color: var(--accent);
+            transform: translateY(-2px);
         }
 
         .dashboard {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 1px; /* สร้างเส้นแบ่งระหว่างการ์ดด้วย Grid Gap */
-            background-color: var(--line); /* เส้นแบ่งสีเทา */
-            border: 1px solid var(--line);
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1100px;
+            margin: 0 auto;
         }
 
         .card {
-            background-color: var(--bg);
-            padding: 40px;
-            transition: 0.3s ease;
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 30px;
             position: relative;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.02);
         }
 
         .card:hover {
-            background-color: var(--card-hover);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
         }
 
-        .card-header {
+        .name-container {
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 40px;
+            margin-bottom: 5px;
         }
 
-        .player-name {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.5rem;
+        .name {
+            font-size: 1.2rem;
             font-weight: 700;
-            text-transform: uppercase;
+            color: var(--text-main);
         }
 
-        .status-mark {
-            width: 12px;
-            height: 12px;
-            background: var(--text-main);
+        .status-badge {
+            display: flex;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--green);
+            font-weight: 500;
+            background: rgba(85, 239, 196, 0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .online-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--green);
             border-radius: 50%;
+            margin-right: 6px;
+        }
+
+        .item-list {
+            margin-top: 25px;
         }
 
         .item-row {
             display: flex;
             justify-content: space-between;
             padding: 12px 0;
-            border-bottom: 1px solid #f9f9f9;
+            border-bottom: 1px solid #f1f2f6;
         }
+
+        .item-row:last-child { border-bottom: none; }
 
         .item-label {
             color: var(--text-sub);
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            font-weight: 500;
+            font-weight: 400;
+            font-size: 0.95rem;
         }
 
         .item-val {
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
-            font-size: 1rem;
+            color: var(--text-main);
+            font-weight: 600;
+            background: #f1f2f6;
+            padding: 2px 10px;
+            border-radius: 8px;
+            font-size: 0.9rem;
         }
 
-        .no-data {
-            grid-column: 1/-1;
-            padding: 100px 0;
-            text-align: center;
-            background: white;
-            color: var(--text-sub);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-size: 0.8rem;
-        }
+        /* สำหรับ Scrollbar แบบมินิมอล */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: #dcdde1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
-        @media (max-width: 768px) {
-            h1 { font-size: 2.5rem; }
-            header { flex-direction: column; align-items: flex-start; gap: 20px; }
-        }
     </style>
 </head>
 <body>
 
-    <div class="wrapper">
-        <header>
-            <h1>JOOD<br>FARM</h1>
-            <div class="header-meta">
-                Inventory Terminal<br>
-                v.2026.4.0<br>
-                Status: Online
-            </div>
-        </header>
-        
-        <div class="search-area">
-            <input type="text" id="searchBar" placeholder="TYPE TO SEARCH..." onkeyup="render()">
-        </div>
-
-        <div class="dashboard" id="display"></div>
+    <h1>JOOD FARM</h1>
+    <div class="subtitle">Live Inventory Tracking</div>
+    
+    <div class="search-container">
+        <input type="text" id="searchBar" placeholder="Search player name..." onkeyup="render()">
     </div>
+
+    <div class="dashboard" id="display"></div>
 
     <script>
         const DB_URL = "https://jood-af2d8-default-rtdb.asia-southeast1.firebasedatabase.app/Players.json";
         
         const itemOrder = [
-            "Race Reroll", "Trait Reroll", "Cid Sword", 
-            "Atomic Orb", "Anywhere Door", "Handcannon", "Holy Fragment"
+            "Race Reroll",
+            "Trait Reroll",
+            "Cid Sword",
+            "Atomic Orb",
+            "Anywhere Door",
+            "Handcannon",
+            "Holy Fragment"
         ];
 
         let lastData = {};
@@ -187,7 +191,7 @@
                     lastData = data;
                     render();
                 }
-            } catch (e) { console.error(e); }
+            } catch (e) { console.error("Connection Error:", e); }
         }
 
         function render() {
@@ -203,13 +207,16 @@
                 let firstKey = Object.keys(items)[0];
                 let lastTimestamp = items[firstKey].Timestamp;
 
+                // ตรวจสอบความสดใหม่ของข้อมูล (30 วินาที)
                 if (now - lastTimestamp > 30) continue; 
 
                 html += `
                 <div class="card">
-                    <div class="card-header">
-                        <div class="player-name">${name}</div>
-                        <div class="status-mark"></div>
+                    <div class="name-container">
+                        <div class="name">${name}</div>
+                        <div class="status-badge">
+                            <div class="online-dot"></div> Online
+                        </div>
                     </div>
                     <div class="item-list">`;
                 
@@ -225,7 +232,7 @@
 
                 html += `</div></div>`;
             }
-            container.innerHTML = html || '<div class="no-data">System Idle / No Active Signals</div>';
+            container.innerHTML = html || '<div style="text-align:center; grid-column: 1/-1; color:#b2bec3;">Waiting for active players...</div>';
         }
 
         setInterval(update, 5000); 
